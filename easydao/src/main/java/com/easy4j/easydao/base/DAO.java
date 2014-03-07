@@ -53,7 +53,7 @@ public interface DAO<T> {
 	 * 
 	 * @return
 	 */
-	List<T> query(int offset,int size);
+	List<T> query();
 
 	/**
 	 * Retrieve a row.

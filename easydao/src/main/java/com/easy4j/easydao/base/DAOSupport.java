@@ -45,7 +45,6 @@ public abstract class DAOSupport<T> implements DAO<T> {
 		this.dataSource = dataSource;
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
-
 	@Override
 	public int insert(T entity) {
 		Map<String, Object> pair = new HashMap<String, Object>();
@@ -122,10 +121,10 @@ public abstract class DAOSupport<T> implements DAO<T> {
 			sql.append(" SET ");
 			int i = 0;
 			for (String colName : pair.keySet()) {
-				sql.append(i > 0 ? "" : ",");
+				sql.append(i > 0 ? "," : "");
 				sql.append(colName);
 				sql.append("=?");
-				args[i] = pair.get(colName);
+				args[i++] = pair.get(colName);
 			}
 			sql.append(" WHERE ");
 			if (whereArgs != null && whereClause != null
@@ -192,12 +191,8 @@ public abstract class DAOSupport<T> implements DAO<T> {
 	}
 
 	@Override
-	public List<T> query( int offset,int size) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("SELECT * FROM ");
-		sb.append(getTableName());
-		sb.append("LIMIT ?,?");
-		return this.jdbcTemplate.query(sb.toString(), new RowMapperImpl());
+	public List<T> query() {
+		return this.jdbcTemplate.query("SELECT * FROM "+getTableName(), new RowMapperImpl());
 	}
 
 	protected void resultSet2Entity(ResultSet rs, T instance) {

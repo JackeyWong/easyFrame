@@ -1,4 +1,4 @@
-package com.idemo.lucene_demo;
+package com.idemo.searcher;
 
 import java.io.File;
 import java.io.IOException;

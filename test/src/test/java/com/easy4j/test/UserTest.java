@@ -35,9 +35,9 @@ public class UserTest {
 		entity.setUserName("test01");
 		dao.update(entity, null, null);
 	}
-	@Test
-	public void queryTest(){
-		List<User> query = dao.query();
+	@Test 
+	public void queryTest(){   
+		List<User> query = dao.query("id",0,9);
 		for (User user : query) {
 			System.out.println(user);
 		}

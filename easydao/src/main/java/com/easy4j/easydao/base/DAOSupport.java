@@ -6,6 +6,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -191,10 +192,26 @@ public abstract class DAOSupport<T> implements DAO<T> {
 	}
 
 	@Override
-	public List<T> query() {
-		return this.jdbcTemplate.query("SELECT * FROM "+getTableName(), new RowMapperImpl());
+	public List<T> query(String orderBy, int offset , int pageSize){
+		StringBuffer sql = new StringBuffer("SELECT * FROM "+getTableName());
+		List<Object> params = new ArrayList<Object>();
+		if(orderBy != null && !orderBy.trim().equals("")){
+			sql.append(" ORDER BY ?");
+			params.add(orderBy);
+		}
+		if(offset > -1 && pageSize > -1){
+			sql.append(" LIMIT ?,?");
+			params.add(offset);
+			params.add(pageSize);
+		}
+		return this.jdbcTemplate.query(sql.toString(),params.toArray(), new RowMapperImpl());
 	}
 
+	@Override
+	public List<T> query(String orderBy){
+		return query(orderBy, -1, -1);
+	}
+	
 	protected void resultSet2Entity(ResultSet rs, T instance) {
 		Field[] fields = instance.getClass().getDeclaredFields();
 		try {

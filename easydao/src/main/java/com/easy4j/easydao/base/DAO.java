@@ -49,11 +49,17 @@ public interface DAO<T> {
 	int delete(String whereClause, String[] whereArgs);
 
 	/**
+	 * query special row.
+	 * 
+	 * @return
+	 */
+	List<T> query(String orderBy, int offset , int pageSize);
+	/**
 	 * query all row.
 	 * 
 	 * @return
 	 */
-	List<T> query();
+	List<T> query(String orderBy);
 
 	/**
 	 * Retrieve a row.

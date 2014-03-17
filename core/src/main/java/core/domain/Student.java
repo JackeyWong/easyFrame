@@ -1,5 +1,8 @@
 package core.domain;
 
+import core.annotation.TestAnnotation;
+
+@TestAnnotation("Student class anno.")
 public class Student {
 
 	private int age;

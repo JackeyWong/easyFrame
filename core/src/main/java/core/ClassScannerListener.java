@@ -83,7 +83,7 @@ public class ClassScannerListener implements ServletContextListener {
 
 		@Override
 		public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-			// TODO Auto-generated method stub
+			System.out.println("annotation : "+desc);
 			return null;
 		}
 

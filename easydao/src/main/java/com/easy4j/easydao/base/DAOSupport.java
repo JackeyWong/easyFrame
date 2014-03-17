@@ -21,13 +21,17 @@ import com.easy4j.easydao.annotation.ID;
 import com.easy4j.easydao.annotation.Table;
 
 /**
+ * <p>
  * Dao常用操作支持类
- *</br> Copyright: Copyright (c) 2003 
- *</br> Company: Epin Solution(Beijing)Technology Co.,Ltd. 
+ * </p>
+ * <p>
+ * Copyright Epin Solution(Beijing)Technology Co.,Ltd.
+ * </p>
+ * 
  * @author <a href="mailto:wangjie2013@126.com">Jackwang<a>
- * @version 1.0 
- * @since 2014年3月6日  下午6:11:44
- */ 
+ * @version 1.0
+ * @since 2014年3月17日 下午4:39:31
+ */
 public abstract class DAOSupport<T> implements DAO<T> {
 
 	private final class RowMapperImpl implements RowMapper<T> {

@@ -11,9 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.easy4j.easydao.annotation.Column;
@@ -32,7 +29,7 @@ import com.easy4j.easydao.annotation.Table;
  * @version 1.0
  * @since 2014年3月17日 下午4:39:31
  */
-public abstract class DAOSupport<T> implements DAO<T> {
+public abstract class DAOSupport<T> extends DataSourceManager implements DAO<T> {
 
 	private final class RowMapperImpl implements RowMapper<T> {
 		@Override
@@ -43,13 +40,6 @@ public abstract class DAOSupport<T> implements DAO<T> {
 		}
 	}
 
-	protected DataSource dataSource;
-	protected JdbcTemplate jdbcTemplate;
-
-	public DAOSupport(DataSource dataSource) {
-		this.dataSource = dataSource;
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-	}
 	@Override
 	public int insert(T entity) {
 		Map<String, Object> pair = new HashMap<String, Object>();

@@ -9,7 +9,7 @@ public interface DAO<T> {
 	 * Insert a row.
 	 * 
 	 * @param t
-	 * @return the number of rows affected
+	 * @return inserted autoincrement key if ID column's autoincrement is true, otherwise return effect column count.
 	 */
 	int insert(T entity);
 

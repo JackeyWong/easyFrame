@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,7 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 
 import com.easy4j.easydao.annotation.Column;
 import com.easy4j.easydao.annotation.ID;
@@ -45,10 +49,9 @@ public abstract class DAOSupport<T> extends DataSourceManager implements DAO<T> 
 		Map<String, Object> pair = new HashMap<String, Object>();
 		entity2Map(entity, pair);
 		int size = (pair != null && pair.size() > 0) ? pair.size() : 0;
-		Object[] args = null;
 		if (size > 0) {
-			args = new Object[size];
-			StringBuffer sql = new StringBuffer();
+			final Object[] args = new Object[size];
+			final StringBuffer sql = new StringBuffer();
 			sql.append("INSERT");
 			sql.append(" INTO ");
 			sql.append(getTableName());
@@ -65,7 +68,24 @@ public abstract class DAOSupport<T> extends DataSourceManager implements DAO<T> 
 				sql.append((i > 0) ? ",?" : "?");
 			}
 			sql.append(')');
-			return this.jdbcTemplate.update(sql.toString(), args);
+			if(isAutoincrementKey()){
+				GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+				this.jdbcTemplate.update(new PreparedStatementCreator() {
+					
+					@Override
+					public PreparedStatement createPreparedStatement(Connection con)
+							throws SQLException {
+						PreparedStatement ps = con.prepareStatement(sql.toString(), new String[]{getKeyColumn()});
+						for (int i = 0;i<args.length;i++) {
+							ps.setObject(i+1, args[i]);
+						}
+						return ps;
+					}
+				}, keyHolder);
+				return keyHolder.getKey().intValue();
+			}else{
+				return jdbcTemplate.update(sql.toString(),args);
+			}
 		} else {
 			return 0;
 		}
@@ -170,6 +190,17 @@ public abstract class DAOSupport<T> extends DataSourceManager implements DAO<T> 
 			}
 		}
 		return "";
+	}
+	protected boolean isAutoincrementKey() {
+		Field[] fields = getEntityInstance().getClass().getDeclaredFields();
+		for (Field field : fields) {
+			Column column = field.getAnnotation(Column.class);
+			ID id = field.getAnnotation(ID.class);
+			if (id != null && column != null) {
+				return id.Autoincrement();
+			}
+		}
+		return false;
 	}
 
 	@Override

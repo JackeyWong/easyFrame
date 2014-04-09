@@ -4,7 +4,28 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <display-name>displayname</display-name>
+  <context-param>
+  	<param-name>doscan-package</param-name>
+  	<param-value>core</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>charset</param-name>
+  	<param-value>UTF-8</param-value>
+  </context-param>
   <listener>
-  	<listener-class>core.ClassScannerListener</listener-class>
+  	<listener-class>core.mymvc.ClassScannerListener</listener-class>
   </listener>
+  <servlet>
+  	<servlet-name>dispatcher</servlet-name>
+  	<servlet-class>core.mymvc.DispatcherServlet</servlet-class>
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>dispatcher</servlet-name>
+  	<url-pattern>/</url-pattern>
+  </servlet-mapping>
+  <welcome-file-list>
+  	<welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
 </web-app>
